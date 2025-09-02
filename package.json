@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/main.js",
-    "dev": "ts-node src/index.ts",
+    "dev": "ts-node -r dotenv/config src/main.ts",
+    "seed:buy": "node scripts/seed_buy.js",
     "test": "jest",
     "lint": "eslint src/**/*.ts",
     "db:init": "node -e \"require('./dist/storage/db').initDatabase()\""

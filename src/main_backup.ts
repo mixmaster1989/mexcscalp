@@ -141,14 +141,17 @@ class MexcScalper {
         const timestamp = Date.now();
         const clientOrderId = `AUTO_BUY_${level}_${timestamp}`;
 
-        await this.restClient.newOrder({
-          symbol: 'ETHUSDC',
-          side: 'BUY',
-          type: 'LIMIT',
-          price: roundedPrice.toString(),
-          quantity: qty.toString(),
-          newClientOrderId: clientOrderId
-        });
+        await this.restClient.newOrder(
+          'ETHUSDC',
+          'BUY',
+          'LIMIT',
+          {
+            timeInForce: 'GTC',
+            price: roundedPrice.toString(),
+            quantity: qty.toString(),
+            newClientOrderId: clientOrderId,
+          }
+        );
 
         this.logger.info(`✅ Buy ордер ${level} размещен: $${roundedPrice}`);
 
@@ -182,14 +185,17 @@ class MexcScalper {
         const timestamp = Date.now();
         const clientOrderId = `AUTO_SELL_${level}_${timestamp}`;
 
-        await this.restClient.newOrder({
-          symbol: 'ETHUSDC',
-          side: 'SELL',
-          type: 'LIMIT',
-          price: roundedPrice.toString(),
-          quantity: qty.toString(),
-          newClientOrderId: clientOrderId
-        });
+        await this.restClient.newOrder(
+          'ETHUSDC',
+          'SELL',
+          'LIMIT',
+          {
+            timeInForce: 'GTC',
+            price: roundedPrice.toString(),
+            quantity: qty.toString(),
+            newClientOrderId: clientOrderId,
+          }
+        );
 
         this.logger.info(`✅ Sell ордер ${level} размещен: $${roundedPrice}`);
 
