@@ -1,0 +1,66 @@
+{
+  "symbol": "ETHUSDC",
+  "deposit_usd": 100,
+  "fees_bps_round_trip": 0,
+  "risk": {
+    "max_notional_pct": 0.20,
+    "max_inventory_pct": 0.06,
+    "ladder_budget_pct": 0.12,
+    "kill_switch_losses": 5,
+    "daily_dd_stop_pct": 0.03,
+    "max_position_duration_sec": 600,
+    "cancel_rate_per_min": 30
+  },
+  "regime": {
+    "z_max": 3.0,
+    "quiet_spread_ticks": 1,
+    "atr_window_1m": 60,
+    "atr_window_5m": 300,
+    "vwap_window_sec": 3600,
+    "obi_levels": 5,
+    "tfi_window_sec": 60
+  },
+  "hedgehog": {
+    "levels": 4,
+    "offset_k_atr1m": 0.5,
+    "step_k_atr1m": 0.6,
+    "tp_bps": {
+      "quiet": 12,
+      "normal": 12,
+      "shock": 12
+    },
+    "size_geometry_r": 1.1,
+    "skew_alpha": 0.7
+  },
+  "ladder": {
+    "steps": 6,
+    "step_k_atr1m": 0.8,
+    "geom_r": 1.2,
+    "tp_bps": 12,
+    "panic_tail_atr5m": 3.0,
+    "panic_close_frac": 0.4,
+    "recenter_interval_sec": 900
+  },
+  "hybrid": {
+    "ladder_trigger_z": 1.0,
+    "enable_in_shock": false,
+    "min_spread_for_ladder": 2
+  },
+  "filters": {
+    "min_spread_ticks": 2,
+    "staleness_ms": 300,
+    "min_notional_usd": 1.0,
+    "min_depth_quote_usd": 50,
+    "obi_threshold": 0.35,
+    "tfi_threshold": 0.4
+  },
+  "ttl": {
+    "order_sec": 45,
+    "refresh_sec": 15
+  },
+  "ws": {
+    "heartbeat_interval_ms": 30000,
+    "reconnect_delay_ms": 5000,
+    "max_reconnect_attempts": 10
+  }
+}
