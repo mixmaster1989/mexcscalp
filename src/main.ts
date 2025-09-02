@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import * as Mexc from 'mexc-api-sdk';
 import TelegramBot from 'node-telegram-bot-api';
+import { initDatabase } from './storage/db';
 import pino from 'pino';
 
 const { getRandomJoke } = require('../jokes');
@@ -9,6 +10,7 @@ class MexcScalper {
   private restClient: any;
   private telegramBot: TelegramBot;
   private logger: pino.Logger;
+  private db: any | null = null;
   private isRunning = false;
   private lastOrders: any[] = [];
   private totalTrades = 0;
@@ -19,6 +21,11 @@ class MexcScalper {
   private ttlMs: number = parseInt(process.env.TTL_MS || '45000', 10);
   private deltaTicksForReplace: number = parseInt(process.env.DELTA_TICKS || '3', 10);
   private tickSize: number = parseFloat(process.env.TICK_SIZE || '0.01');
+  private stepSize: number = parseFloat(process.env.STEP_SIZE || '0.000001');
+  private minNotional: number = parseFloat(process.env.MIN_NOTIONAL || '1');
+  private minQty: number = parseFloat(process.env.MIN_QTY || '0');
+  private cancelTimestamps: number[] = [];
+  private orderNotionalUsd: number = parseFloat(process.env.ORDER_NOTIONAL_USD || '1.5');
 
   constructor() {
     this.restClient = new (Mexc as any).Spot(
@@ -33,6 +40,13 @@ class MexcScalper {
   async start(): Promise<void> {
     this.isRunning = true;
     this.logger.info('Starting MEXC scalper');
+    await this.loadExchangeFilters('ETHUSDC');
+    try {
+      this.db = await initDatabase(process.env.DATABASE_PATH || './data/mexc_bot.db');
+      this.logger.info('Database initialized');
+    } catch (e) {
+      this.logger.warn({ err: e }, 'Failed to initialize database');
+    }
     await this.initializeOrders();
     await this.sendTelegramMessage(
       '*MEXC Scalper Started*\n\n' +
@@ -48,6 +62,15 @@ class MexcScalper {
         this.logger.error({ err: error }, 'Error in maintainOrders');
       }
     }, 30000);
+
+    // Lightweight healthcheck (server time drift)
+    setInterval(async () => {
+      try {
+        await this.healthcheck();
+      } catch (e) {
+        this.logger.warn({ err: e }, 'Healthcheck failed');
+      }
+    }, 300000);
   }
 
   async stop(): Promise<void> {
@@ -88,10 +111,11 @@ class MexcScalper {
       const sellOrders = currentOrders.filter((o: any) => o.side === 'SELL').length;
       this.logger.info(`Open orders: ${buyOrders} buy, ${sellOrders} sell`);
 
-      // Anti-stall: refresh outdated BUY orders (TTL or drift)
+      // Anti-stall: refresh outdated BUY/SELL orders (TTL or drift)
       await this.refreshStaleBuyOrders(currentOrders, bestBid, bestAsk, mid);
+      await this.refreshStaleSellOrders(currentOrders, bestBid, bestAsk, mid);
 
-      if (buyOrders < levels) await this.placeMissingBuyOrders(currentOrders, mid, bestAsk, levels);
+      if (buyOrders < levels) await this.placeMissingBuyOrders(currentOrders, mid, bestBid, bestAsk, levels);
       if (sellOrders < levels) await this.placeMissingSellOrders(currentOrders, mid, bestBid, bestAsk, levels);
 
       const now = Date.now();
@@ -105,7 +129,7 @@ class MexcScalper {
     }
   }
 
-  private async placeMissingBuyOrders(currentOrders: any[], priceBase: number, bestAsk?: number, levels: number = 4): Promise<void> {
+  private async placeMissingBuyOrders(currentOrders: any[], priceBase: number, bestBid?: number, bestAsk?: number, levels: number = 4): Promise<void> {
     if (String(process.env.DRY_RUN).toLowerCase() === 'true') {
       this.logger.info('DRY_RUN enabled: skipping BUY order placement');
       return;
@@ -125,7 +149,18 @@ class MexcScalper {
         const maxMakerPrice = this.roundToTick(bestAsk - this.tickSize);
         if (roundedPrice >= maxMakerPrice) roundedPrice = maxMakerPrice;
       }
-      const qty = 0.000345;
+      // Additional maker-guard BUY: keep at/below bestBid with a safety gap
+      if (typeof bestBid === 'number' && isFinite(bestBid)) {
+        const gapTicks = Math.max(1, parseInt(process.env.MAKER_GUARD_GAP_TICKS || '1', 10));
+        const guard = this.roundToTick(bestBid - gapTicks * this.tickSize);
+        if (roundedPrice > guard) roundedPrice = guard;
+      }
+      // Quantity: target notional rounded to step, ensure minNotional and minQty
+      let qty = this.roundToStep((parseFloat(process.env.ORDER_NOTIONAL_USD || '1.5')) / Math.max(roundedPrice, 1e-8));
+      if (this.minQty && qty < this.minQty) qty = this.minQty;
+      if (roundedPrice * qty < (this.minNotional || 1)) {
+        qty = this.roundToStep((this.minNotional || 1) / Math.max(roundedPrice, 1e-8));
+      }
       try {
         const timestamp = Date.now();
         const clientOrderId = `AUTO_BUY_${level}_${timestamp}`;
@@ -141,6 +176,7 @@ class MexcScalper {
             newClientOrderId: clientOrderId,
           }
         );
+        await this.logEvent('ORDER_PLACED', { side: 'BUY', level, price: roundedPrice, qty, clientOrderId });
         this.orderBirth.set(clientOrderId, timestamp);
         this.logger.info(`Placed BUY L${level} at $${roundedPrice}`);
         await new Promise((r) => setTimeout(r, 1000));
@@ -182,7 +218,18 @@ class MexcScalper {
         const minMakerPrice = this.roundToTick(bestBid + this.tickSize);
         if (roundedPrice <= minMakerPrice) roundedPrice = minMakerPrice;
       }
-      const qty = 0.000344; // ~ $1.5 notional
+      // Additional maker-guard SELL: keep at/above bestAsk with a safety gap
+      if (typeof bestAsk === 'number' && isFinite(bestAsk)) {
+        const gapTicks = Math.max(1, parseInt(process.env.MAKER_GUARD_GAP_TICKS || '1', 10));
+        const guard = this.roundToTick(bestAsk + gapTicks * this.tickSize);
+        if (roundedPrice < guard) roundedPrice = guard;
+      }
+      // Quantity: target notional rounded to step, ensure minNotional and minQty
+      let qty = this.roundToStep((parseFloat(process.env.ORDER_NOTIONAL_USD || '1.5')) / Math.max(roundedPrice, 1e-8));
+      if (this.minQty && qty < this.minQty) qty = this.minQty;
+      if (roundedPrice * qty < (this.minNotional || 1)) {
+        qty = this.roundToStep((this.minNotional || 1) / Math.max(roundedPrice, 1e-8));
+      }
       if (freeEth < qty) {
         this.logger.warn(`Skip SELL L${level}: insufficient ETH free=${freeEth} < qty=${qty}`);
         break;
@@ -202,6 +249,7 @@ class MexcScalper {
             newClientOrderId: clientOrderId,
           }
         );
+        await this.logEvent('ORDER_PLACED', { side: 'SELL', level, price: roundedPrice, qty, clientOrderId });
         this.logger.info(`Placed SELL L${level} at $${roundedPrice}`);
         await new Promise((r) => setTimeout(r, 1000));
         freeEth -= qty; // reduce local estimate
@@ -225,15 +273,25 @@ class MexcScalper {
         const driftTicks = bestBid && op ? Math.floor((bestBid - op) / this.tickSize) : 0;
         if (age > this.ttlMs || driftTicks > this.deltaTicksForReplace) {
           try {
+            if (!this.canCancelNow()) {
+              this.logger.warn('Cancel rate limit reached, skipping BUY refresh');
+              continue;
+            }
             await this.restClient.cancelOrder('ETHUSDC', { origClientOrderId: coid });
+            await this.logEvent('ORDER_CANCELED', { side: 'BUY', clientOrderId: coid });
             // parse level from clientOrderId
             const level = this.parseLevelFromClientId(coid) ?? 0;
             const offset = 5.7;
             const step = 4.275;
             let newPrice = this.roundToTick(priceBase - offset - step * level);
-            const maxMakerPrice = this.roundToTick(bestAsk - this.tickSize);
-            if (newPrice >= maxMakerPrice) newPrice = maxMakerPrice;
-            const qty = 0.000345;
+            const gapTicks = Math.max(1, parseInt(process.env.MAKER_GUARD_GAP_TICKS || '1', 10));
+            const guard = this.roundToTick(bestBid - gapTicks * this.tickSize);
+            if (newPrice > guard) newPrice = guard;
+            let qty = this.roundToStep((parseFloat(process.env.ORDER_NOTIONAL_USD || '1.5')) / Math.max(newPrice, 1e-8));
+            if (this.minQty && qty < this.minQty) qty = this.minQty;
+            if (newPrice * qty < (this.minNotional || 1)) {
+              qty = this.roundToStep((this.minNotional || 1) / Math.max(newPrice, 1e-8));
+            }
             const newId = `AUTO_BUY_${level}_${Date.now()}`;
             await this.restClient.newOrder('ETHUSDC', 'BUY', 'LIMIT', {
               timeInForce: 'GTC',
@@ -241,6 +299,7 @@ class MexcScalper {
               quantity: qty.toString(),
               newClientOrderId: newId,
             });
+            await this.logEvent('ORDER_REPRICED', { side: 'BUY', level, price: newPrice, qty, clientOrderId: newId });
             this.orderBirth.delete(coid);
             this.orderBirth.set(newId, Date.now());
             this.logger.info(`Repriced BUY L${level} -> $${newPrice} (age=${Math.round(age/1000)}s, drift=${driftTicks}t)`);
@@ -292,8 +351,96 @@ class MexcScalper {
     }
   }
 
+  // Cancel and re-place sell orders that are too old or too shallow vs current ask
+  private async refreshStaleSellOrders(currentOrders: any[], bestBid: number, bestAsk: number, priceBase: number): Promise<void> {
+    try {
+      const sellOrders = currentOrders.filter((o: any) => o.side === 'SELL');
+      for (const o of sellOrders) {
+        const coid: string = o.clientOrderId || o.origClientOrderId || '';
+        if (!coid) continue;
+        const placedAt = this.orderBirth.get(coid) || Date.now();
+        if (!this.orderBirth.has(coid)) this.orderBirth.set(coid, placedAt);
+        const age = Date.now() - placedAt;
+        const op = parseFloat(o.price || o.origPrice || '0');
+        const driftTicks = bestAsk && op ? Math.floor((op - bestAsk) / this.tickSize) : 0; // how far below ask
+        if (age > this.ttlMs || driftTicks > this.deltaTicksForReplace) {
+          try {
+            if (!this.canCancelNow()) {
+              this.logger.warn('Cancel rate limit reached, skipping SELL refresh');
+              continue;
+            }
+            await this.restClient.cancelOrder('ETHUSDC', { origClientOrderId: coid });
+            const level = this.parseLevelFromClientId(coid) ?? 0;
+            const offset = 5.7;
+            const step = 4.275;
+            let newPrice = this.roundToTick(priceBase + offset + step * level);
+            // Maker-guard SELL: floor at/above bestAsk with gap
+            const gapTicks = Math.max(1, parseInt(process.env.MAKER_GUARD_GAP_TICKS || '1', 10));
+            const guard = this.roundToTick(bestAsk + gapTicks * this.tickSize);
+            if (newPrice < guard) newPrice = guard;
+            let qty = this.roundToStep((parseFloat(process.env.ORDER_NOTIONAL_USD || '1.5')) / Math.max(newPrice, 1e-8));
+            if (this.minQty && qty < this.minQty) qty = this.minQty;
+            if (newPrice * qty < (this.minNotional || 1)) {
+              qty = this.roundToStep((this.minNotional || 1) / Math.max(newPrice, 1e-8));
+            }
+            const newId = `AUTO_SELL_${level}_${Date.now()}`;
+            await this.restClient.newOrder('ETHUSDC', 'SELL', 'LIMIT', {
+              timeInForce: 'GTC',
+              price: newPrice.toString(),
+              quantity: qty.toString(),
+              newClientOrderId: newId,
+            });
+            this.orderBirth.delete(coid);
+            this.orderBirth.set(newId, Date.now());
+            this.logger.info(`Repriced SELL L${level} -> $${newPrice} (age=${Math.round(age/1000)}s, drift=${driftTicks}t)`);
+            await new Promise((r) => setTimeout(r, 400));
+          } catch (err) {
+            this.logger.error({ err }, `Failed to refresh SELL order ${coid}`);
+          }
+        }
+      }
+    } catch (e) {
+      this.logger.error({ err: e }, 'refreshStaleSellOrders failed');
+    }
+  }
+
   private getBalanceMessage(): string {
     return 'Balance summary: (not implemented)';
+  }
+
+  private roundToStep(qty: number): number {
+    if (!this.stepSize || !isFinite(this.stepSize)) return qty;
+    const k = Math.floor(qty / this.stepSize);
+    const n = k * this.stepSize;
+    const decimals = (this.stepSize.toString().split('.')[1] || '').length;
+    return Number(n.toFixed(decimals));
+  }
+
+  private canCancelNow(): boolean {
+    const limit = parseInt(process.env.CANCEL_RATE_PER_MIN || '30', 10);
+    const now = Date.now();
+    this.cancelTimestamps = this.cancelTimestamps.filter((t) => now - t < 60_000);
+    if (this.cancelTimestamps.length >= limit) return false;
+    this.cancelTimestamps.push(now);
+    return true;
+  }
+
+  private async loadExchangeFilters(symbol: string): Promise<void> {
+    try {
+      const info = await this.restClient.exchangeInfo({ symbol });
+      const arr = (info?.symbols ?? []);
+      const s = Array.isArray(arr) ? arr.find((x: any) => x.symbol === symbol) : undefined;
+      const priceFilter = s?.filters?.find((f: any) => f.filterType === 'PRICE_FILTER');
+      const lotFilter = s?.filters?.find((f: any) => f.filterType === 'LOT_SIZE');
+      const notionalFilter = s?.filters?.find((f: any) => f.filterType === 'MIN_NOTIONAL');
+      if (priceFilter?.tickSize) this.tickSize = parseFloat(priceFilter.tickSize);
+      if (lotFilter?.stepSize) this.stepSize = parseFloat(lotFilter.stepSize);
+      if (lotFilter?.minQty) this.minQty = parseFloat(lotFilter.minQty);
+      if (notionalFilter?.minNotional) this.minNotional = parseFloat(notionalFilter.minNotional);
+      this.logger.info({ tickSize: this.tickSize, stepSize: this.stepSize, minNotional: this.minNotional, minQty: this.minQty }, 'Loaded exchange filters');
+    } catch (e) {
+      this.logger.warn({ err: e }, 'Failed to load exchange filters, using defaults');
+    }
   }
 
   private setupTelegramHandlers(): void {
@@ -327,6 +474,30 @@ class MexcScalper {
       );
     } catch (error) {
       this.logger.error({ err: error }, 'Failed to send Telegram message');
+    }
+  }
+
+  private async logEvent(type: string, payload: any): Promise<void> {
+    try {
+      if (!this.db?.run) return;
+      await this.db.run('INSERT INTO events (ts, type, payload_json) VALUES (?, ?, ?)', [Date.now(), type, JSON.stringify(payload)]);
+    } catch (e) {
+      this.logger.warn({ err: e }, 'Failed to log event');
+    }
+  }
+
+  private async healthcheck(): Promise<void> {
+    try {
+      const t = await this.restClient.time?.();
+      const serverTime = t?.serverTime ?? t?.server_time ?? undefined;
+      if (serverTime) {
+        const drift = Math.abs(Date.now() - Number(serverTime));
+        if (drift > 5000) {
+          this.logger.warn({ driftMs: drift }, 'Server time drift detected');
+        }
+      }
+    } catch (e) {
+      this.logger.warn({ err: e }, 'Failed to query server time');
     }
   }
 }
