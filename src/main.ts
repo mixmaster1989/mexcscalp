@@ -20,12 +20,16 @@ class MexcScalper {
   private orderBirth: Map<string, number> = new Map();
   private ttlMs: number = parseInt(process.env.TTL_MS || '45000', 10);
   private deltaTicksForReplace: number = parseInt(process.env.DELTA_TICKS || '3', 10);
+  private minRepriceIntervalMs: number = parseInt(process.env.REPRICE_MIN_INTERVAL_MS || '15000', 10);
   private tickSize: number = parseFloat(process.env.TICK_SIZE || '0.01');
   private stepSize: number = parseFloat(process.env.STEP_SIZE || '0.000001');
   private minNotional: number = parseFloat(process.env.MIN_NOTIONAL || '1');
   private minQty: number = parseFloat(process.env.MIN_QTY || '0');
   private cancelTimestamps: number[] = [];
   private orderNotionalUsd: number = parseFloat(process.env.ORDER_NOTIONAL_USD || '1.5');
+  private recvWindow: number = parseInt(process.env.MEXC_RECV_WINDOW || '60000', 10);
+  private autoSeedEth: boolean = String(process.env.AUTO_SEED_ETH || 'false').toLowerCase() === 'true';
+  private seedBaseUsd: number = parseFloat(process.env.SEED_BASE_USD || '10');
 
   constructor() {
     this.restClient = new (Mexc as any).Spot(
@@ -97,7 +101,21 @@ class MexcScalper {
 
   private async maintainOrders(): Promise<void> {
     try {
-      const currentOrders = await this.restClient.openOrders('ETHUSDC');
+      const currentOrders = await (async () => {
+        try {
+          // Some SDKs accept options with recvWindow as second argument
+          const o = await (this.restClient.openOrders('ETHUSDC', { recvWindow: this.recvWindow })
+            .catch(() => this.restClient.openOrders('ETHUSDC')));
+          return o;
+        } catch (e: any) {
+          const msg = String(e?.message || '');
+          if (msg.includes('recvWindow') || msg.includes('700003')) {
+            try { await this.restClient.time?.(); } catch {}
+            try { return await this.restClient.openOrders('ETHUSDC'); } catch {}
+          }
+          throw e;
+        }
+      })();
       const currentPrice = await this.restClient.tickerPrice('ETHUSDC');
       const price = parseFloat(currentPrice.price);
       // Best bid/ask for drift and maker-guard
@@ -173,9 +191,7 @@ class MexcScalper {
             timeInForce: 'GTC',
             price: roundedPrice.toString(),
             quantity: qty.toString(),
-            newClientOrderId: clientOrderId,
-          }
-        );
+            newClientOrderId: clientOrderId,\n            recvWindow: this.recvWindow,\n          }\n        );
         await this.logEvent('ORDER_PLACED', { side: 'BUY', level, price: roundedPrice, qty, clientOrderId });
         this.orderBirth.set(clientOrderId, timestamp);
         this.logger.info(`Placed BUY L${level} at $${roundedPrice}`);
@@ -198,7 +214,7 @@ class MexcScalper {
     // Check free ETH to avoid Oversold (30005)
     let freeEth = 0;
     try {
-      const account = await this.restClient.accountInfo();
+      const account = await this.restClient.accountInfo({ recvWindow: this.recvWindow });
       const ethBal = (account.balances || []).find((b: any) => (b.asset || b.symbol || '').toUpperCase() === 'ETH');
       if (ethBal) {
         freeEth = parseFloat(ethBal.free || '0');
@@ -231,8 +247,18 @@ class MexcScalper {
         qty = this.roundToStep((this.minNotional || 1) / Math.max(roundedPrice, 1e-8));
       }
       if (freeEth < qty) {
-        this.logger.warn(`Skip SELL L${level}: insufficient ETH free=${freeEth} < qty=${qty}`);
-        break;
+        if (this.autoSeedEth && String(process.env.DRY_RUN).toLowerCase() !== 'true') {
+          await this.ensureBaseInventory(priceBase, qty);
+          try {
+            const account2 = await this.restClient.accountInfo({ recvWindow: this.recvWindow });
+            const ethBal2 = (account2.balances || []).find((b: any) => (b.asset || b.symbol || '').toUpperCase() === 'ETH');
+            if (ethBal2) freeEth = parseFloat(ethBal2.free || '0');
+          } catch {}
+        }
+        if (freeEth < qty) {
+          this.logger.warn(`Skip SELL L${level}: insufficient ETH free=${freeEth} < qty=${qty}`);
+          break;
+        }
       }
       try {
         const timestamp = Date.now();
@@ -243,6 +269,7 @@ class MexcScalper {
           'SELL',
           'LIMIT',
           {
+            recvWindow: this.recvWindow,
             timeInForce: 'GTC',
             price: roundedPrice.toString(),
             quantity: qty.toString(),
@@ -268,8 +295,7 @@ class MexcScalper {
         if (!coid) continue;
         const placedAt = this.orderBirth.get(coid) || Date.now();
         if (!this.orderBirth.has(coid)) this.orderBirth.set(coid, placedAt);
-        const age = Date.now() - placedAt;
-        const op = parseFloat(o.price || o.origPrice || '0');
+        const age = Date.now() - placedAt; if (age < this.minRepriceIntervalMs) { continue; } const op = parseFloat(o.price || o.origPrice || '0');
         const driftTicks = bestBid && op ? Math.floor((bestBid - op) / this.tickSize) : 0;
         if (age > this.ttlMs || driftTicks > this.deltaTicksForReplace) {
           try {
@@ -277,7 +303,7 @@ class MexcScalper {
               this.logger.warn('Cancel rate limit reached, skipping BUY refresh');
               continue;
             }
-            await this.restClient.cancelOrder('ETHUSDC', { origClientOrderId: coid });
+            await this.restClient.cancelOrder('ETHUSDC', { origClientOrderId: coid, recvWindow: this.recvWindow });
             await this.logEvent('ORDER_CANCELED', { side: 'BUY', clientOrderId: coid });
             // parse level from clientOrderId
             const level = this.parseLevelFromClientId(coid) ?? 0;
@@ -298,6 +324,7 @@ class MexcScalper {
               price: newPrice.toString(),
               quantity: qty.toString(),
               newClientOrderId: newId,
+              recvWindow: this.recvWindow,
             });
             await this.logEvent('ORDER_REPRICED', { side: 'BUY', level, price: newPrice, qty, clientOrderId: newId });
             this.orderBirth.delete(coid);
@@ -360,8 +387,7 @@ class MexcScalper {
         if (!coid) continue;
         const placedAt = this.orderBirth.get(coid) || Date.now();
         if (!this.orderBirth.has(coid)) this.orderBirth.set(coid, placedAt);
-        const age = Date.now() - placedAt;
-        const op = parseFloat(o.price || o.origPrice || '0');
+        const age = Date.now() - placedAt; if (age < this.minRepriceIntervalMs) { continue; } const op = parseFloat(o.price || o.origPrice || '0');
         const driftTicks = bestAsk && op ? Math.floor((op - bestAsk) / this.tickSize) : 0; // how far below ask
         if (age > this.ttlMs || driftTicks > this.deltaTicksForReplace) {
           try {
@@ -384,7 +410,7 @@ class MexcScalper {
               qty = this.roundToStep((this.minNotional || 1) / Math.max(newPrice, 1e-8));
             }
             const newId = `AUTO_SELL_${level}_${Date.now()}`;
-            await this.restClient.newOrder('ETHUSDC', 'SELL', 'LIMIT', {
+            await this.restClient.newOrder('ETHUSDC', 'SELL', 'LIMIT', { recvWindow: this.recvWindow, recvWindow: this.recvWindow, 
               timeInForce: 'GTC',
               price: newPrice.toString(),
               quantity: qty.toString(),
@@ -524,3 +550,9 @@ async function main() {
 }
 
 main();
+
+
+
+
+
+
