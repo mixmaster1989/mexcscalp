@@ -1,0 +1,87 @@
+{
+  "symbol": "ETHUSDC",
+  "deposit_usd": 100,
+  "mode": "hedgehog",
+  
+  "ladder": {
+    "levels": 7,
+    "k_step": 0.8,
+    "tp_pct": 0.12,
+    "geometry_r": 1.2,
+    "z_max": 3,
+    "description": "Лесенка: ступенчатые покупки вниз от VWAP, выход по TP"
+  },
+  
+  "hedgehog": {
+    "levels": 5,
+    "offset_k": 0.5,
+    "step_k": 0.6,
+    "tp_pct": 0.10,
+    "max_direction_usd": 20,
+    "order_size_usd": 5,
+    "description": "Ёршики: двусторонние микро-квоты, быстрые TP"
+  },
+  
+  "risk": {
+    "max_notional_per_symbol": 120,
+    "max_drawdown_pct": 8,
+    "max_consecutive_losses": 5,
+    "emergency_stop_atr_multiplier": 2,
+    "description": "Риск-менеджмент: лимиты и стопы"
+  },
+  
+  "indicators": {
+    "vwap_period_minutes": 60,
+    "atr_period": 20,
+    "ema_20_period": 20,
+    "ema_50_period": 50,
+    "description": "Технические индикаторы для принятия решений"
+  },
+  
+  "timing": {
+    "main_loop_interval_ms": 5000,
+    "reprice_interval_ms": 30000,
+    "status_update_interval_ms": 900000,
+    "order_ttl_ms": 300000,
+    "max_distance_atr_multiplier": 1,
+    "description": "Тайминги обновления и репрайсинга"
+  },
+  
+  "presets": {
+    "eth_conservative": {
+      "mode": "hedgehog",
+      "hedgehog": {
+        "levels": 3,
+        "offset_k": 0.3,
+        "step_k": 0.4,
+        "tp_pct": 0.08,
+        "max_inventory_pct": 10
+      },
+      "description": "Консервативный режим для ETH"
+    },
+    
+    "eth_aggressive": {
+      "mode": "ladder",
+      "ladder": {
+        "levels": 9,
+        "k_step": 1.0,
+        "tp_pct": 0.15,
+        "geometry_r": 1.3,
+        "z_max": 2
+      },
+      "description": "Агрессивный режим для ETH"
+    },
+    
+    "eth_hybrid": {
+      "mode": "hedgehog",
+      "hedgehog": {
+        "levels": 5,
+        "offset_k": 0.5,
+        "step_k": 0.6,
+        "tp_pct": 0.10,
+        "max_inventory_pct": 3
+      },
+      "description": "Гибридный режим - баланс скорости и прибыли"
+    }
+  }
+}

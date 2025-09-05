@@ -21,7 +21,9 @@
     "tfi_window_sec": 60
   },
   "hedgehog": {
-    "levels": 4,
+    "levels": 6,
+    "max_total_orders": 10,
+    "max_total_notional": 40,
     "offset_k_atr1m": 0.5,
     "step_k_atr1m": 0.6,
     "tp_bps": {

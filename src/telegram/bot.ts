@@ -91,10 +91,67 @@ export class MexcTelegramBot extends EventEmitter {
     });
 
     this.bot.on('error', (error) => {
+      // Детальная отладка ошибки
+      this.logger.error('🔴 TELEGRAM ERROR ДЕТАЛИ:', {
+        message: error.message,
+        code: (error as any).code,
+        stack: error.stack,
+        name: error.name,
+        fullError: JSON.stringify(error, null, 2)
+      });
+      
+      // Проверяем тип ошибки
+      if (error.message && error.message.includes('AggregateError')) {
+        this.logger.error('🚨 ОБНАРУЖЕН AGGREGATE ERROR В TELEGRAM!');
+        this.logger.error('📋 Детали AggregateError:', {
+          message: error.message,
+          code: (error as any).code,
+          stack: error.stack
+        });
+      }
+      
+      // Проверяем код ошибки
+      if ((error as any).code === 'EFATAL') {
+        this.logger.error('💀 КРИТИЧЕСКАЯ ОШИБКА EFATAL В TELEGRAM!');
+        this.logger.error('📋 Детали EFATAL:', {
+          message: error.message,
+          stack: error.stack
+        });
+      }
+      
       this.logger.error('Ошибка Telegram бота:', error);
     });
 
     this.bot.on('polling_error', (error) => {
+      // Детальная отладка ошибки
+      this.logger.error('🔴 POLLING ERROR ДЕТАЛИ:', {
+        message: error.message,
+        code: (error as any).code,
+        stack: error.stack,
+        name: error.name,
+        fullError: JSON.stringify(error, null, 2)
+      });
+      
+      // Проверяем тип ошибки
+      if (error.message && error.message.includes('AggregateError')) {
+        this.logger.error('🚨 ОБНАРУЖЕН AGGREGATE ERROR!');
+        this.logger.error('📋 Детали AggregateError:', {
+          message: error.message,
+          code: (error as any).code,
+          stack: error.stack
+        });
+      }
+      
+      // Проверяем код ошибки
+      if ((error as any).code === 'EFATAL') {
+        this.logger.error('💀 КРИТИЧЕСКАЯ ОШИБКА EFATAL!');
+        this.logger.error('📋 Детали EFATAL:', {
+          message: error.message,
+          stack: error.stack
+        });
+      }
+      
+      // Логируем общую ошибку
       this.logger.error('Ошибка polling:', error);
     });
   }
@@ -174,8 +231,36 @@ export class MexcTelegramBot extends EventEmitter {
   async sendMessage(message: string): Promise<void> {
     try {
       this.messageCount++;
+      this.logger.info('📤 Отправляем сообщение в Telegram:', {
+        chatId: this.groupChatId,
+        messageLength: message.length,
+        messageCount: this.messageCount
+      });
+      
       await this.bot.sendMessage(this.groupChatId, message, { parse_mode: 'Markdown' });
+      
+      this.logger.info('✅ Сообщение успешно отправлено в Telegram');
     } catch (error) {
+      // Детальная отладка ошибки отправки
+      this.logger.error('🔴 ОШИБКА ОТПРАВКИ СООБЩЕНИЯ:', {
+        message: (error as Error).message,
+        code: (error as any).code,
+        stack: (error as Error).stack,
+        name: (error as Error).name,
+        chatId: this.groupChatId,
+        fullError: JSON.stringify(error, null, 2)
+      });
+      
+      // Проверяем тип ошибки
+      if ((error as Error).message && (error as Error).message.includes('AggregateError')) {
+        this.logger.error('🚨 ОБНАРУЖЕН AGGREGATE ERROR ПРИ ОТПРАВКЕ!');
+      }
+      
+      // Проверяем код ошибки
+      if ((error as any).code === 'EFATAL') {
+        this.logger.error('💀 КРИТИЧЕСКАЯ ОШИБКА EFATAL ПРИ ОТПРАВКЕ!');
+      }
+      
       this.logger.error('Ошибка отправки сообщения:', error);
     }
   }
