@@ -1,0 +1,21 @@
+{
+  "symbol": "ETHUSDC",
+  "orderNotional": 5,
+  "maxLayers": 3,
+  "ksig": 1.5,
+  "sMinPercent": 0.05,
+  "sMaxPercent": 0.25,
+  "tpMultiplier": 1.0,
+  "slMultiplier": 1.8,
+  "ttlSeconds": 2.0,
+  "cooldownSeconds": 2.0,
+  "maxLongQtyPercent": 25,
+  "stopDayPercent": 2.0,
+  "maxConsecutiveLosses": 7,
+  "spikeThresholdMultiplier": 3.0,
+  "spikeThresholdMin": 0.20,
+  "updateIntervalMs": 250,
+  "watchdogTimeoutSeconds": 10,
+  "killSwitchTimeoutSeconds": 30,
+  "dryRun": false
+}

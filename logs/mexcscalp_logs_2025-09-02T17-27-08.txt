@@ -1,0 +1,306 @@
+[1m[90m[TAILING] Tailing last 300 lines for [mexcscalp] process (change the value with --lines option)[39m[22m
+[90m/home/user1/.pm2/logs/mexcscalp-error.log last 300 lines:[39m
+[31m10|mexcsca | [39merror: [polling_error] {"code":"EFATAL","message":"EFATAL: AggregateError"}
+
+[90m/home/user1/.pm2/logs/mexcscalp-out.log last 300 lines:[39m
+[32m10|mexcsca | [39m{"level":40,"time":1756832527053,"pid":2833045,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000344"}
+[32m10|mexcsca | [39mSIGINT received, shutting down...
+[32m10|mexcsca | [39m{"level":30,"time":1756832551434,"pid":2833045,"hostname":"vm-065c2a","msg":"Stopped MEXC scalper"}
+[32m10|mexcsca | [39mStarting MEXC scalper...
+[32m10|mexcsca | [39m{"level":30,"time":1756832552473,"pid":2881772,"hostname":"vm-065c2a","msg":"Starting MEXC scalper"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832552904,"pid":2881772,"hostname":"vm-065c2a","tickSize":0.01,"stepSize":0.000001,"minNotional":1,"minQty":0,"msg":"Loaded exchange filters"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832552952,"pid":2881772,"hostname":"vm-065c2a","msg":"Database initialized"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832553234,"pid":2881772,"hostname":"vm-065c2a","count":4,"msg":"Loaded open orders"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832584346,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832584997,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4279 (age=0s, drift=2815t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832585966,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4283.27 (age=0s, drift=2389t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832586932,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4283.27 (age=0s, drift=2389t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832587965,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4279 (age=0s, drift=2815t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756832588631,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000347"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832614463,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832615037,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4281 (age=26s, drift=2721t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832616019,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4285.27 (age=29s, drift=2293t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832617077,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4285.27 (age=30s, drift=2293t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832618153,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4281 (age=32s, drift=2721t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756832618871,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000347"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832644481,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832645103,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4280.22 (age=26s, drift=2431t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832646155,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4284.49 (age=28s, drift=2004t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832647124,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4284.49 (age=31s, drift=2004t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832648225,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4280.22 (age=32s, drift=2431t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756832648889,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000347"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832674351,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832674912,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4282.21 (age=26s, drift=2793t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832676080,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4286.48 (age=28s, drift=2367t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832677052,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4286.48 (age=30s, drift=2367t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832678023,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4282.21 (age=32s, drift=2793t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756832678686,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000347"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832704399,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832704975,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4282.54 (age=26s, drift=2639t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832706026,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4286.81 (age=28s, drift=2213t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832707098,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4286.81 (age=30s, drift=2213t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832708078,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4282.54 (age=33s, drift=2639t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756832708750,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000347"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832734381,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832735076,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4280.52 (age=26s, drift=2285t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832736106,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4284.8 (age=28s, drift=1857t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832737079,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4284.8 (age=30s, drift=1857t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832738135,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4280.52 (age=33s, drift=2285t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756832738798,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000347"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832764390,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832764959,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4280.97 (age=26s, drift=2575t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832766058,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4285.24 (age=28s, drift=2147t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832767291,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4285.24 (age=30s, drift=2147t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832768332,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4280.97 (age=33s, drift=2575t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756832769078,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000347"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832794426,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832794994,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4279.31 (age=26s, drift=2200t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832796059,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4283.59 (age=28s, drift=1773t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832797038,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4283.59 (age=30s, drift=1773t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832798006,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4279.31 (age=32s, drift=2200t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756832798688,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000347"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832824478,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832825048,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4279.25 (age=26s, drift=2352t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832826035,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4283.52 (age=28s, drift=1925t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832827062,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4283.52 (age=30s, drift=1925t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832828125,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4279.25 (age=32s, drift=2352t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756832828894,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000347"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832854677,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832855281,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4280.05 (age=27s, drift=2527t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832856308,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4284.33 (age=29s, drift=2100t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832857288,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4284.33 (age=31s, drift=2100t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832858669,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4280.05 (age=33s, drift=2527t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756832859346,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000347"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832884698,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832885450,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4280.66 (age=26s, drift=2296t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832886457,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4284.94 (age=29s, drift=1868t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832887423,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4284.94 (age=31s, drift=1868t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832888508,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4280.66 (age=33s, drift=2296t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756832889202,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000347"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832914762,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832915355,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4278.89 (age=26s, drift=2361t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832916390,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4283.17 (age=28s, drift=1934t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832917359,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4283.17 (age=30s, drift=1934t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832918325,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4278.89 (age=32s, drift=2361t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756832918991,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000347"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832944681,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832945271,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4277.27 (age=26s, drift=2360t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832946390,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4281.54 (age=28s, drift=1932t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832947519,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4281.54 (age=30s, drift=1932t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832948579,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4277.27 (age=33s, drift=2360t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756832949263,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000348"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832974636,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832975218,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4275.71 (age=26s, drift=2340t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832976313,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4279.98 (age=28s, drift=1914t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832977379,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4279.98 (age=30s, drift=1914t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756832978438,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4275.71 (age=33s, drift=2340t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756832979225,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000348"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833004759,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833005350,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4272.84 (age=26s, drift=2207t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833006351,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4277.11 (age=28s, drift=1781t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833007417,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4277.11 (age=30s, drift=1781t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833008581,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4272.84 (age=33s, drift=2207t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833009253,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000348"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833034661,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833035249,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4271.47 (age=26s, drift=2365t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833036284,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4275.74 (age=28s, drift=1939t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833037276,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4275.74 (age=30s, drift=1939t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833038271,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4271.47 (age=32s, drift=2365t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833038936,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000348"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833064665,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833065271,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4271.7 (age=26s, drift=2471t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833066287,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4275.97 (age=28s, drift=2044t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833067277,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4275.97 (age=30s, drift=2044t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833068341,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4271.7 (age=32s, drift=2471t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833069023,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000348"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833094715,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833095294,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4267.31 (age=26s, drift=2014t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833096337,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4271.59 (age=28s, drift=1586t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833097357,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4271.59 (age=30s, drift=1586t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833098342,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4267.31 (age=32s, drift=2014t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833099008,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000348"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833124681,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833125313,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4266.5 (age=26s, drift=2427t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833126291,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4270.78 (age=28s, drift=2000t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833127328,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4270.78 (age=30s, drift=2000t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833128405,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4266.5 (age=32s, drift=2427t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833129078,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000348"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833154680,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833155292,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4264.14 (age=26s, drift=2181t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833156432,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4268.42 (age=28s, drift=1753t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833157498,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4268.42 (age=31s, drift=1753t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833158620,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4264.14 (age=33s, drift=2181t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833159312,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000349"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833184837,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833185440,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4265.46 (age=26s, drift=2635t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833186495,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4269.73 (age=28s, drift=2207t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833187475,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4269.73 (age=30s, drift=2207t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833188463,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4265.46 (age=33s, drift=2635t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833189140,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000348"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833214719,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833215395,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4265.88 (age=26s, drift=2585t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833216371,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4270.15 (age=28s, drift=2159t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833217471,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4270.15 (age=30s, drift=2159t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833218619,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4265.88 (age=32s, drift=2585t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833219332,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000348"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833244811,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833245556,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4267.58 (age=26s, drift=2627t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833246542,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4271.85 (age=28s, drift=2201t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833247611,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4271.85 (age=31s, drift=2201t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833248618,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4267.58 (age=33s, drift=2627t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833249287,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000348"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833275295,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833276009,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4267.37 (age=27s, drift=2418t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833277171,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4271.64 (age=29s, drift=1990t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833278206,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4271.64 (age=31s, drift=1990t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833279246,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4267.37 (age=33s, drift=2418t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833280016,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000348"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833304668,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833305378,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4266.67 (age=25s, drift=2407t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833306423,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4270.94 (age=28s, drift=1980t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833307509,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4270.94 (age=30s, drift=1980t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833308482,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4266.67 (age=32s, drift=2407t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833309147,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000348"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833334697,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833335286,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4268.4 (age=26s, drift=2718t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833336264,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4272.68 (age=28s, drift=2291t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833337260,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4272.68 (age=30s, drift=2291t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833338241,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4268.4 (age=32s, drift=2718t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833338898,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000348"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833364941,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833365636,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4271.35 (age=27s, drift=2851t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833366624,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4275.62 (age=29s, drift=2422t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833367616,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4275.62 (age=31s, drift=2422t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833368705,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4271.35 (age=33s, drift=2851t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833369409,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000348"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833394688,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833395346,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4270.23 (age=26s, drift=2400t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833396538,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4274.5 (age=28s, drift=1973t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833397544,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4274.5 (age=30s, drift=1973t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833398518,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4270.23 (age=32s, drift=2400t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833399196,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000348"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833424731,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833425336,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4271.59 (age=26s, drift=2696t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833426307,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4275.86 (age=28s, drift=2268t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833427327,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4275.86 (age=30s, drift=2268t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833428363,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4271.59 (age=32s, drift=2696t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833429029,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000348"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833454691,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833455350,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4270.52 (age=26s, drift=2418t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833456327,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4274.8 (age=28s, drift=1991t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833457304,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4274.8 (age=30s, drift=1991t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833458330,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4270.52 (age=32s, drift=2418t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833459000,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000348"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833484652,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833485266,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4271.9 (age=26s, drift=2719t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833486466,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4276.18 (age=28s, drift=2292t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833487466,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4276.18 (age=31s, drift=2292t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833488442,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4271.9 (age=33s, drift=2719t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833489121,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000348"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833514762,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833515406,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4275.22 (age=26s, drift=2861t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833516431,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4279.49 (age=28s, drift=2432t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833517405,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4279.49 (age=30s, drift=2432t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833518486,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4275.22 (age=33s, drift=2861t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833519148,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000348"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833544841,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833545435,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4277.95 (age=26s, drift=2771t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833546516,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4282.22 (age=28s, drift=2344t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833547486,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4282.22 (age=30s, drift=2344t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833548604,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4277.95 (age=32s, drift=2771t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833549316,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000347"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833574755,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833575351,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4278.82 (age=26s, drift=2690t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833576358,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4283.1 (age=28s, drift=2263t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833577336,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4283.1 (age=30s, drift=2263t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833578418,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4278.82 (age=32s, drift=2690t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833579171,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000347"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833605672,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833606409,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4278.93 (age=27s, drift=2610t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833607571,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4283.21 (age=29s, drift=2181t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833608554,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4283.21 (age=32s, drift=2181t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833609534,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4278.93 (age=34s, drift=2610t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833610206,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000347"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833634692,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833635500,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4278.02 (age=25s, drift=2506t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833636595,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4282.29 (age=27s, drift=2078t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833637635,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4282.29 (age=29s, drift=2078t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833638721,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4278.02 (age=32s, drift=2506t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833639379,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000347"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833664748,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833665311,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4278.45 (age=26s, drift=2652t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833666397,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4282.72 (age=28s, drift=2226t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833667440,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4282.72 (age=30s, drift=2226t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833668528,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4278.45 (age=32s, drift=2652t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833669238,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000347"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833694750,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833695462,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4276.18 (age=26s, drift=2340t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833696516,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4280.45 (age=28s, drift=1913t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833697603,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4280.45 (age=31s, drift=1913t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833698673,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4276.18 (age=33s, drift=2340t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833699383,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000348"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833724779,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833725507,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4275.94 (age=26s, drift=2542t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833726570,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4280.21 (age=28s, drift=2115t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833727577,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4280.21 (age=30s, drift=2115t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833728675,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4275.94 (age=33s, drift=2542t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833729421,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000348"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833754675,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833755265,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4276.6 (age=26s, drift=2675t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833756237,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4280.87 (age=28s, drift=2247t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833757225,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4280.87 (age=30s, drift=2247t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833758202,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4276.6 (age=32s, drift=2675t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833758907,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000348"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833784657,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833785380,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4278.68 (age=26s, drift=2868t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833786453,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4282.95 (age=29s, drift=2442t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833787518,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4282.95 (age=31s, drift=2442t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833788544,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4278.68 (age=33s, drift=2868t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833789256,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000347"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833814682,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833815312,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4276.24 (age=26s, drift=2301t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833816375,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4280.52 (age=28s, drift=1875t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833817432,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4280.52 (age=30s, drift=1875t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833818418,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4276.24 (age=32s, drift=2301t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833819132,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000348"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833844738,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833845404,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4279 (age=26s, drift=2919t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833846475,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4283.27 (age=28s, drift=2491t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833847589,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4283.27 (age=31s, drift=2491t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833848667,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4279 (age=33s, drift=2919t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833849385,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000347"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833874724,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833875421,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4280.4 (age=26s, drift=2743t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833876468,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4284.68 (age=28s, drift=2316t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833877506,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4284.68 (age=30s, drift=2316t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833878531,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4280.4 (age=33s, drift=2743t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833879194,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000347"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833904797,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833905486,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4279.7 (age=26s, drift=2511t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833906462,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4283.97 (age=28s, drift=2082t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833907493,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4283.97 (age=30s, drift=2082t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833908576,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4279.7 (age=32s, drift=2511t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833909349,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000347"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833934716,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833935285,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4282.14 (age=26s, drift=2810t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833936311,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4286.41 (age=28s, drift=2382t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833937340,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4286.41 (age=30s, drift=2382t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833938383,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4282.14 (age=32s, drift=2810t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833939046,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000347"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833964760,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833965398,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4283.61 (age=26s, drift=2717t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833966447,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4287.89 (age=28s, drift=2290t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833967473,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4287.89 (age=31s, drift=2290t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833968532,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4283.61 (age=33s, drift=2717t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833969204,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000347"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833994778,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833995522,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4282.76 (age=26s, drift=2472t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833996602,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4287.03 (age=28s, drift=2043t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833997630,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4287.03 (age=31s, drift=2043t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756833998710,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4282.76 (age=33s, drift=2472t)"}
+[32m10|mexcsca | [39m{"level":40,"time":1756833999464,"pid":2881772,"hostname":"vm-065c2a","msg":"Skip SELL L0: insufficient ETH free=0.00012 < qty=0.000347"}
+[32m10|mexcsca | [39m{"level":30,"time":1756834024802,"pid":2881772,"hostname":"vm-065c2a","msg":"Open orders: 4 buy, 0 sell"}
+[32m10|mexcsca | [39m{"level":30,"time":1756834025465,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L5 -> $4283.1 (age=26s, drift=2567t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756834026549,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4287.37 (age=28s, drift=2140t)"}
+[32m10|mexcsca | [39m{"level":30,"time":1756834027595,"pid":2881772,"hostname":"vm-065c2a","msg":"Repriced BUY L4 -> $4287.37 (age=30s, drift=2140t)"}
+
