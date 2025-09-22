@@ -1,0 +1,129 @@
+import crypto from 'crypto';
+import axios, { AxiosInstance } from 'axios';
+
+export interface PlaceOrderParams {
+  symbol: string; // e.g. 'ETHUSDC'
+  side: 'BUY' | 'SELL';
+  type?: 'LIMIT' | 'MARKET';
+  quantity?: string; // base asset quantity
+  quoteOrderQty?: string; // quote asset quantity for MARKET
+  price?: string; // required for LIMIT
+  timeInForce?: 'GTC' | 'IOC' | 'FOK';
+  recvWindow?: number;
+}
+
+export interface CancelOrderParams {
+  symbol: string;
+  orderId?: string;
+  origClientOrderId?: string;
+  recvWindow?: number;
+}
+
+export interface MexcSpotClientConfig {
+  apiKey: string;
+  apiSecret: string;
+  baseUrl?: string; // default https://api.mexc.com
+  timeoutMs?: number;
+}
+
+export class MexcSpotClient {
+  private client: AxiosInstance;
+  private apiKey: string;
+  private apiSecret: string;
+
+  constructor(config?: Partial<MexcSpotClientConfig>) {
+    const apiKey = process.env.MEXC_API_KEY || '';
+    const apiSecret = process.env.MEXC_SECRET_KEY || '';
+
+    this.apiKey = config?.apiKey ?? apiKey;
+    this.apiSecret = config?.apiSecret ?? apiSecret;
+
+    if (!this.apiKey || !this.apiSecret) {
+      throw new Error('MEXC API credentials are missing. Set MEXC_API_KEY and MEXC_SECRET_KEY in environment.');
+    }
+
+    this.client = axios.create({
+      baseURL: config?.baseUrl ?? (process.env.MEXC_BASE_URL || 'https://api.mexc.com'),
+      timeout: config?.timeoutMs ?? 15000,
+      headers: { 'Content-Type': 'application/json', 'X-MEXC-APIKEY': this.apiKey }
+    });
+  }
+
+  private sign(query: string): string {
+    return crypto.createHmac('sha256', this.apiSecret).update(query).digest('hex');
+  }
+
+  private buildQuery(params: Record<string, any>): string {
+    return Object.keys(params)
+      .filter((k) => params[k] !== undefined && params[k] !== null)
+      .sort()
+      .map((k) => `${k}=${encodeURIComponent(String(params[k]))}`)
+      .join('&');
+  }
+
+  private async signedRequest<T>(method: 'GET' | 'POST' | 'DELETE', path: string, params: Record<string, any> = {}): Promise<T> {
+    const timestamp = Date.now();
+    const recvWindow = params.recvWindow ?? Number(process.env.MEXC_RECV_WINDOW || 60000);
+    const baseParams = { ...params, timestamp, recvWindow };
+    const query = this.buildQuery(baseParams);
+    const signature = this.sign(query);
+    const url = `${path}?${query}&signature=${signature}`;
+
+    const response = await this.client.request<T>({ method, url });
+    return response.data as T;
+  }
+
+  async getAccountInfo(): Promise<any> {
+    return this.signedRequest<any>('GET', '/api/v3/account');
+  }
+
+  async getOpenOrders(symbol?: string): Promise<any[]> {
+    const params: Record<string, any> = {};
+    if (symbol) params.symbol = symbol;
+    return this.signedRequest<any[]>('GET', '/api/v3/openOrders', params);
+  }
+
+  async placeOrder(params: PlaceOrderParams): Promise<any> {
+    const payload: Record<string, any> = {
+      symbol: params.symbol,
+      side: params.side,
+      type: params.type ?? 'MARKET',
+      timeInForce: params.timeInForce,
+      quantity: params.quantity,
+      quoteOrderQty: params.quoteOrderQty,
+      price: params.price,
+      recvWindow: params.recvWindow
+    };
+    return this.signedRequest<any>('POST', '/api/v3/order', payload);
+  }
+
+  async cancelOrder(params: CancelOrderParams): Promise<any> {
+    const payload: Record<string, any> = {
+      symbol: params.symbol,
+      orderId: params.orderId,
+      origClientOrderId: params.origClientOrderId,
+      recvWindow: params.recvWindow
+    };
+    return this.signedRequest<any>('DELETE', '/api/v3/order', payload);
+  }
+
+  async getMyTrades(symbol: string, options?: { limit?: number; startTime?: number; endTime?: number }): Promise<any[]> {
+    const params: Record<string, any> = { symbol };
+    if (options?.limit) params.limit = options.limit;
+    if (options?.startTime) params.startTime = options.startTime;
+    if (options?.endTime) params.endTime = options.endTime;
+    return this.signedRequest<any[]>('GET', '/api/v3/myTrades', params);
+  }
+
+  async getPrice(symbol: string): Promise<any> {
+    return this.client.get(`/api/v3/ticker/price?symbol=${symbol}`);
+  }
+
+  async getAllPrices(): Promise<any> {
+    return this.client.get('/api/v3/ticker/price');
+  }
+
+  async get24hrTicker(symbol: string): Promise<any> {
+    return this.client.get(`/api/v3/ticker/24hr?symbol=${symbol}`);
+  }
+}

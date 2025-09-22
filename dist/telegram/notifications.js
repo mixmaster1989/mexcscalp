@@ -1,305 +1,208 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TelegramNotifications = void 0;
+const node_telegram_bot_api_1 = __importDefault(require("node-telegram-bot-api"));
 /**
- * Система уведомлений Telegram бота
+ * Telegram уведомления для торгового бота
  */
 class TelegramNotifications {
-    bot;
-    auth;
-    isEnabled = true;
-    messageQueue = [];
-    sendingInProgress = false;
-    constructor(bot, auth) {
-        this.bot = bot;
-        this.auth = auth;
-        // Запускаем обработчик очереди сообщений
-        this.startMessageProcessor();
+    bot = null;
+    config;
+    logger;
+    chatId;
+    constructor(config, logger) {
+        this.config = config;
+        this.logger = logger;
+        this.chatId = config.chatId;
+        if (config.enabled && config.botToken) {
+            try {
+                this.bot = new node_telegram_bot_api_1.default(config.botToken, { polling: false });
+                this.logger.info('Telegram бот инициализирован');
+            }
+            catch (error) {
+                this.logger.error({ error }, 'Ошибка инициализации Telegram бота');
+                this.config.enabled = false;
+            }
+        }
     }
     /**
-     * Отправить уведомление
+     * Отправить уведомление о запуске бота
      */
-    async sendNotification(notification) {
-        if (!this.isEnabled) {
+    async sendStartupMessage(config) {
+        if (!this.isEnabled())
             return;
-        }
-        const chatIds = this.auth.getNotificationChatIds(notification.priority);
-        if (chatIds.length === 0) {
-            return;
-        }
-        const message = this.formatNotification(notification);
-        const options = this.getMessageOptions(notification);
-        // Добавляем сообщения в очередь
-        for (const chatId of chatIds) {
-            this.messageQueue.push({ chatId, message, options });
-        }
-    }
-    /**
-     * Уведомление о сделке
-     */
-    async notifyTrade(fill) {
-        const sideIcon = fill.side === 'buy' ? '🟢' : '🔴';
-        const title = `${sideIcon} Сделка ${fill.side.toUpperCase()}`;
         const message = `
-*Цена:* \`$${fill.price.toFixed(4)}\`
-*Количество:* \`${fill.quantity.toFixed(6)} ETH\`
-*Сумма:* \`$${(fill.price * fill.quantity).toFixed(2)}\`
-*Комиссия:* \`$${fill.fee.toFixed(4)}\`
-*Время:* ${this.formatTime(fill.timestamp)}
-    `;
-        await this.sendNotification({
-            type: 'trade',
-            title,
-            message,
-            priority: 'medium',
-            timestamp: Date.now(),
-            data: fill
-        });
-    }
-    /**
-     * Уведомление об изменении режима рынка
-     */
-    async notifyRegimeChange(previous, current, confidence) {
-        const regimeIcons = {
-            quiet: '🌙',
-            normal: '☀️',
-            shock: '⚡'
-        };
-        const title = `${regimeIcons[current]} Изменение режима рынка`;
-        const message = `
-*Предыдущий:* \`${previous}\` ${regimeIcons[previous]}
-*Новый:* \`${current}\` ${regimeIcons[current]}
-*Уверенность:* \`${(confidence * 100).toFixed(1)}%\`
-*Время:* ${this.formatTime(Date.now())}
+🚀 *MEXC ScalperBot запущен!*
 
-${this.getRegimeDescription(current)}
-    `;
-        await this.sendNotification({
-            type: 'regime_change',
-            title,
-            message,
-            priority: current === 'shock' ? 'high' : 'medium',
-            timestamp: Date.now(),
-            data: { previous, current, confidence }
-        });
+📋 *Конфигурация:*
+💰 Депозит: ${config.deposit} USDT
+📊 Пары: ${config.targetPairs.join(', ')}
+💹 Размер позиции: ${config.positionSizePercent}%
+🎯 Цель прибыли: ${config.targetProfitPercent}%
+🛡️ Стоп-лосс: ${config.stopLossPercent}%
+⏱️ Время сделки: ${config.minTradeTimeMs / 1000}-${config.maxTradeTimeMs / 1000}с
+
+✅ Бот готов к торговле!
+    `.trim();
+        await this.sendMessage(message);
+    }
+    /**
+     * Уведомление об открытии позиции
+     */
+    async notifyPositionOpened(position) {
+        if (!this.isEnabled())
+            return;
+        const sideEmoji = position.side === 'buy' ? '🟢' : '🔴';
+        const positionValue = position.quantity * position.entryPrice;
+        const tpDistance = Math.abs((position.takeProfit - position.entryPrice) / position.entryPrice * 100);
+        const slDistance = Math.abs((position.stopLoss - position.entryPrice) / position.entryPrice * 100);
+        const message = `
+${sideEmoji} *Позиция открыта*
+
+📊 ${position.symbol}
+📈 ${position.side.toUpperCase()} ${position.quantity}
+💰 Цена: $${position.entryPrice.toFixed(2)}
+💵 Сумма: $${positionValue.toFixed(2)}
+
+🎯 TP: $${position.takeProfit.toFixed(2)} (+${tpDistance.toFixed(2)}%)
+🛡️ SL: $${position.stopLoss.toFixed(2)} (-${slDistance.toFixed(2)}%)
+    `.trim();
+        await this.sendMessage(message);
+    }
+    /**
+     * Уведомление о закрытии позиции
+     */
+    async notifyPositionClosed(trade) {
+        if (!this.isEnabled())
+            return;
+        const isProfit = trade.pnl > 0;
+        const emoji = isProfit ? '✅' : '❌';
+        const pnlSign = isProfit ? '+' : '';
+        const reasonText = this.getReasonText(trade.reason);
+        const message = `
+${emoji} *Позиция закрыта*
+
+📊 ${trade.symbol}
+📈 ${trade.side.toUpperCase()} ${trade.quantity}
+💰 Вход: $${trade.entryPrice.toFixed(2)}
+💰 Выход: $${trade.exitPrice.toFixed(2)}
+
+💵 PnL: ${pnlSign}$${trade.pnl.toFixed(4)} (${pnlSign}${trade.pnlPercent.toFixed(2)}%)
+⏱️ Время: ${this.formatDuration(trade.duration)}
+📝 Причина: ${reasonText}
+    `.trim();
+        await this.sendMessage(message);
     }
     /**
      * Уведомление об ошибке
      */
-    async notifyError(error, context) {
-        const title = '❌ Системная ошибка';
+    async notifyError(error) {
+        if (!this.isEnabled())
+            return;
+        const emoji = error.critical ? '🚨' : '⚠️';
+        const priority = error.critical ? 'КРИТИЧЕСКАЯ' : 'Предупреждение';
         const message = `
-*Контекст:* \`${context}\`
-*Ошибка:* \`${error.message}\`
-*Время:* ${this.formatTime(Date.now())}
+${emoji} *${priority} ошибка*
 
-⚠️ Проверьте логи для подробной информации.
-    `;
-        await this.sendNotification({
-            type: 'error',
-            title,
-            message,
-            priority: 'high',
-            timestamp: Date.now(),
-            data: { error: error.message, context }
-        });
+🔧 Тип: ${error.type}
+📊 Пара: ${error.symbol || 'N/A'}
+📝 Описание: ${error.message}
+    `.trim();
+        await this.sendMessage(message);
     }
     /**
-     * Критическое уведомление (kill-switch, emergency stop)
+     * Периодический отчет
      */
-    async notifyCritical(title, message, data) {
-        await this.sendNotification({
-            type: 'alert',
-            title: `🚨 ${title}`,
-            message: `${message}\n\n*Время:* ${this.formatTime(Date.now())}`,
-            priority: 'critical',
-            timestamp: Date.now(),
-            data
-        });
-    }
-    /**
-     * Системное уведомление (запуск, остановка)
-     */
-    async notifySystem(title, message, data) {
-        await this.sendNotification({
-            type: 'system',
-            title: `🤖 ${title}`,
-            message: `${message}\n\n*Время:* ${this.formatTime(Date.now())}`,
-            priority: 'medium',
-            timestamp: Date.now(),
-            data
-        });
-    }
-    /**
-     * Уведомление о прибыли/убытке
-     */
-    async notifyPnL(pnl, totalTrades, winRate) {
-        const pnlIcon = pnl >= 0 ? '💰' : '📉';
-        const title = `${pnlIcon} Отчет P&L`;
+    async sendPeriodicReport(stats) {
+        if (!this.isEnabled())
+            return;
+        const uptimeFormatted = this.formatDuration(stats.uptime);
+        const pnlEmoji = stats.dailyPnL >= 0 ? '📈' : '📉';
+        const pnlSign = stats.dailyPnL >= 0 ? '+' : '';
         const message = `
-*P&L сегодня:* \`$${pnl.toFixed(2)}\`
-*Сделок:* \`${totalTrades}\`
-*Win Rate:* \`${(winRate * 100).toFixed(1)}%\`
-*Время:* ${this.formatTime(Date.now())}
-    `;
-        await this.sendNotification({
-            type: 'system',
-            title,
-            message,
-            priority: pnl < -50 ? 'high' : 'low', // Высокий приоритет при больших убытках
-            timestamp: Date.now(),
-            data: { pnl, totalTrades, winRate }
-        });
-    }
-    /**
-     * Уведомление о достижении лимитов
-     */
-    async notifyLimitReached(limitType, currentValue, maxValue) {
-        const title = '⚠️ Достигнут лимит';
-        const message = `
-*Тип лимита:* \`${limitType}\`
-*Текущее значение:* \`${currentValue}\`
-*Максимальное значение:* \`${maxValue}\`
-*Время:* ${this.formatTime(Date.now())}
+📊 *Отчет ScalperBot*
 
-🛑 Торговля может быть приостановлена.
-    `;
-        await this.sendNotification({
-            type: 'alert',
-            title,
-            message,
-            priority: 'high',
-            timestamp: Date.now(),
-            data: { limitType, currentValue, maxValue }
-        });
+⏱️ Время работы: ${uptimeFormatted}
+📍 Активных позиций: ${stats.positionsCount}
+${pnlEmoji} Дневной PnL: ${pnlSign}$${stats.dailyPnL.toFixed(2)}
+📈 Всего сделок: ${stats.totalTrades}
+🎯 Винрейт: ${stats.winRate.toFixed(1)}%
+💰 Profit Factor: ${stats.profitFactor.toFixed(2)}
+    `.trim();
+        await this.sendMessage(message);
     }
     /**
-     * Форматировать уведомление
+     * Уведомление об остановке
      */
-    formatNotification(notification) {
-        const priorityIcons = {
-            low: '📘',
-            medium: '📙',
-            high: '📕',
-            critical: '🚨'
+    async sendShutdownMessage(reason = 'Пользователь') {
+        if (!this.isEnabled())
+            return;
+        const message = `
+🛑 *ScalperBot остановлен*
+
+📝 Причина: ${reason}
+⏰ Время: ${new Date().toLocaleString('ru-RU')}
+
+💤 Бот завершил работу
+    `.trim();
+        await this.sendMessage(message);
+    }
+    /**
+     * Проверить статус Telegram
+     */
+    async checkStatus() {
+        if (!this.isEnabled())
+            return false;
+        try {
+            await this.bot.getMe();
+            return true;
+        }
+        catch (error) {
+            this.logger.warn({ error }, 'Ошибка проверки Telegram статуса');
+            return false;
+        }
+    }
+    isEnabled() {
+        return this.config.enabled && this.bot !== null;
+    }
+    async sendMessage(text) {
+        if (!this.isEnabled())
+            return;
+        try {
+            await this.bot.sendMessage(this.chatId, text, {
+                parse_mode: 'Markdown',
+                disable_web_page_preview: true
+            });
+        }
+        catch (error) {
+            this.logger.error({ error, text }, 'Ошибка отправки Telegram сообщения');
+        }
+    }
+    getReasonText(reason) {
+        const reasons = {
+            'take_profit': '🎯 Take Profit',
+            'stop_loss': '🛡️ Stop Loss',
+            'timeout': '⏰ Тайм-аут',
+            'emergency': '🚨 Аварийное закрытие'
         };
-        const icon = priorityIcons[notification.priority];
-        return `${icon} *${notification.title}*\n\n${notification.message}`;
+        return reasons[reason] || reason;
     }
-    /**
-     * Получить опции сообщения
-     */
-    getMessageOptions(notification) {
-        const options = {
-            parse_mode: 'Markdown'
-        };
-        // Для критических уведомлений добавляем кнопки быстрого реагирования
-        if (notification.priority === 'critical') {
-            options.reply_markup = {
-                inline_keyboard: [
-                    [
-                        { text: '🚨 Аварийный стоп', callback_data: 'emergency_stop' },
-                        { text: '📊 Статус', callback_data: 'show_status' }
-                    ]
-                ]
-            };
+    formatDuration(ms) {
+        const seconds = Math.floor(ms / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        if (hours > 0) {
+            return `${hours}ч ${minutes % 60}м`;
         }
-        // Отключаем уведомления для низкого приоритета
-        if (notification.priority === 'low') {
-            options.disable_notification = true;
+        else if (minutes > 0) {
+            return `${minutes}м ${seconds % 60}с`;
         }
-        return options;
-    }
-    /**
-     * Получить описание режима рынка
-     */
-    getRegimeDescription(regime) {
-        switch (regime) {
-            case 'quiet':
-                return '🌙 *Тихий режим:* Низкая волатильность, узкие спреды';
-            case 'normal':
-                return '☀️ *Нормальный режим:* Стандартные параметры торговли';
-            case 'shock':
-                return '⚡ *Шоковый режим:* Высокая волатильность, осторожная торговля';
-            default:
-                return '';
+        else {
+            return `${seconds}с`;
         }
-    }
-    /**
-     * Запустить обработчик очереди сообщений
-     */
-    startMessageProcessor() {
-        setInterval(async () => {
-            if (this.sendingInProgress || this.messageQueue.length === 0) {
-                return;
-            }
-            this.sendingInProgress = true;
-            try {
-                // Отправляем по одному сообщению каждые 100ms для соблюдения rate limits
-                const message = this.messageQueue.shift();
-                if (message) {
-                    await this.bot.sendMessage(message.chatId, message.message, message.options);
-                }
-            }
-            catch (error) {
-                console.error('Ошибка отправки Telegram сообщения:', error);
-            }
-            finally {
-                this.sendingInProgress = false;
-            }
-        }, 100); // 100ms между сообщениями
-    }
-    /**
-     * Форматировать время
-     */
-    formatTime(timestamp) {
-        const date = new Date(timestamp);
-        return date.toLocaleString('ru-RU', {
-            timeZone: 'Europe/Moscow',
-            day: '2-digit',
-            month: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-        });
-    }
-    /**
-     * Включить/выключить уведомления
-     */
-    setEnabled(enabled) {
-        this.isEnabled = enabled;
-    }
-    /**
-     * Получить статус уведомлений
-     */
-    isNotificationsEnabled() {
-        return this.isEnabled;
-    }
-    /**
-     * Получить размер очереди сообщений
-     */
-    getQueueSize() {
-        return this.messageQueue.length;
-    }
-    /**
-     * Очистить очередь сообщений
-     */
-    clearQueue() {
-        this.messageQueue = [];
-    }
-    /**
-     * Отправить тестовое уведомление
-     */
-    async sendTestNotification(chatId) {
-        const message = `
-🧪 *Тестовое уведомление*
-
-✅ Telegram бот работает корректно!
-🕐 Время: ${this.formatTime(Date.now())}
-
-Все уведомления будут приходить в этот чат.
-    `;
-        await this.bot.sendMessage(chatId, message, { parse_mode: 'Markdown' });
     }
 }
 exports.TelegramNotifications = TelegramNotifications;

@@ -1,88 +1,89 @@
-import TelegramBot from 'node-telegram-bot-api';
-import { TelegramAuth } from './auth';
-import { TelegramNotification } from './types';
-import { Fill, MarketRegime } from '../core/types';
+import pino from 'pino';
+export interface NotificationConfig {
+    botToken: string;
+    chatId: string;
+    enabled: boolean;
+}
+export interface TradeNotification {
+    type: 'position_opened' | 'position_closed' | 'error' | 'status';
+    symbol: string;
+    side?: 'buy' | 'sell';
+    price?: number;
+    quantity?: number;
+    pnl?: number;
+    reason?: string;
+    message: string;
+}
 /**
- * Система уведомлений Telegram бота
+ * Telegram уведомления для торгового бота
  */
 export declare class TelegramNotifications {
     private bot;
-    private auth;
-    private isEnabled;
-    private messageQueue;
-    private sendingInProgress;
-    constructor(bot: TelegramBot, auth: TelegramAuth);
+    private config;
+    private logger;
+    private chatId;
+    constructor(config: NotificationConfig, logger: pino.Logger);
     /**
-     * Отправить уведомление
+     * Отправить уведомление о запуске бота
      */
-    sendNotification(notification: TelegramNotification): Promise<void>;
+    sendStartupMessage(config: any): Promise<void>;
     /**
-     * Уведомление о сделке
+     * Уведомление об открытии позиции
      */
-    notifyTrade(fill: Fill): Promise<void>;
+    notifyPositionOpened(position: {
+        id: string;
+        symbol: string;
+        side: 'buy' | 'sell';
+        entryPrice: number;
+        quantity: number;
+        takeProfit: number;
+        stopLoss: number;
+    }): Promise<void>;
     /**
-     * Уведомление об изменении режима рынка
+     * Уведомление о закрытии позиции
      */
-    notifyRegimeChange(previous: MarketRegime, current: MarketRegime, confidence: number): Promise<void>;
+    notifyPositionClosed(trade: {
+        symbol: string;
+        side: 'buy' | 'sell';
+        entryPrice: number;
+        exitPrice: number;
+        quantity: number;
+        pnl: number;
+        pnlPercent: number;
+        duration: number;
+        reason: string;
+    }): Promise<void>;
     /**
      * Уведомление об ошибке
      */
-    notifyError(error: Error, context: string): Promise<void>;
+    notifyError(error: {
+        type: string;
+        message: string;
+        symbol?: string;
+        critical?: boolean;
+    }): Promise<void>;
     /**
-     * Критическое уведомление (kill-switch, emergency stop)
+     * Периодический отчет
      */
-    notifyCritical(title: string, message: string, data?: any): Promise<void>;
+    sendPeriodicReport(stats: {
+        uptime: number;
+        positionsCount: number;
+        dailyPnL: number;
+        totalTrades: number;
+        winRate: number;
+        profitFactor: number;
+    }): Promise<void>;
     /**
-     * Системное уведомление (запуск, остановка)
+     * Уведомление об остановке
      */
-    notifySystem(title: string, message: string, data?: any): Promise<void>;
+    sendShutdownMessage(reason?: string): Promise<void>;
     /**
-     * Уведомление о прибыли/убытке
+     * Проверить статус Telegram
      */
-    notifyPnL(pnl: number, totalTrades: number, winRate: number): Promise<void>;
-    /**
-     * Уведомление о достижении лимитов
-     */
-    notifyLimitReached(limitType: string, currentValue: number, maxValue: number): Promise<void>;
-    /**
-     * Форматировать уведомление
-     */
-    private formatNotification;
-    /**
-     * Получить опции сообщения
-     */
-    private getMessageOptions;
-    /**
-     * Получить описание режима рынка
-     */
-    private getRegimeDescription;
-    /**
-     * Запустить обработчик очереди сообщений
-     */
-    private startMessageProcessor;
-    /**
-     * Форматировать время
-     */
-    private formatTime;
-    /**
-     * Включить/выключить уведомления
-     */
-    setEnabled(enabled: boolean): void;
-    /**
-     * Получить статус уведомлений
-     */
-    isNotificationsEnabled(): boolean;
-    /**
-     * Получить размер очереди сообщений
-     */
-    getQueueSize(): number;
-    /**
-     * Очистить очередь сообщений
-     */
-    clearQueue(): void;
-    /**
-     * Отправить тестовое уведомление
-     */
-    sendTestNotification(chatId: number): Promise<void>;
+    checkStatus(): Promise<boolean>;
+    private isEnabled;
+    private sendMessage;
+    private getReasonText;
+    private formatDuration;
 }
 //# sourceMappingURL=notifications.d.ts.map

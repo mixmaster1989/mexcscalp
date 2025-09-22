@@ -65,6 +65,8 @@ export declare class MexcWebSocketClient extends EventEmitter {
      * Обработать входящее сообщение
      */
     private handleMessage;
+    private handleProtobufMiniTicker;
+    private handleMiniTickerData;
     /**
      * Обработать данные тикера
      */

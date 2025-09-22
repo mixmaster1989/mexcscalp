@@ -1,0 +1,133 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.TelegramNotifier = void 0;
+const telegraf_1 = require("telegraf");
+class TelegramNotifier {
+    bot;
+    chatIds;
+    constructor(botToken, chatIds) {
+        this.bot = new telegraf_1.Telegraf(botToken);
+        this.chatIds = chatIds.split(',').map(id => id.trim());
+    }
+    /**
+     * Отправить уведомление о запуске системы
+     */
+    async sendSystemStarted() {
+        const message = `🚀 *СИСТЕМА ЗАПУЩЕНА*
+
+📊 *Статус:* Анализ рынка активен
+🎯 *Стратегия:* Поиск локальных минимумов
+🤖 *LLM:* Включен
+📱 *Telegram:* Включен
+
+Система готова к работе!`;
+        await this.sendToAllChats(message);
+    }
+    /**
+     * Отправить анализ сделки
+     */
+    async sendTradeAnalysis(symbol, action, price, confidence, reasoning, patterns, marketConditions, recommendation) {
+        const emoji = action === 'BUY' ? '🟢' : action === 'SELL' ? '🔴' : '🟡';
+        const patternsText = patterns.length > 0 ? patterns.join(', ') : 'Не определены';
+        const conditionsText = marketConditions.length > 0 ? marketConditions.join(', ') : 'Не определены';
+        const message = `${emoji} *${action} СИГНАЛ - ${symbol}*
+
+💰 *Цена:* $${price.toFixed(4)}
+🎯 *Уверенность:* ${confidence}%
+📊 *Паттерны:* ${patternsText}
+🌍 *Условия рынка:* ${conditionsText}
+
+🧠 *LLM АНАЛИЗ:*
+${reasoning}
+
+💡 *РЕКОМЕНДАЦИЯ:*
+${recommendation}`;
+        await this.sendToAllChats(message);
+    }
+    /**
+     * Отправить отчет о рынке
+     */
+    async sendMarketReport(totalTrades, winRate, profitFactor, bestPattern, currentTrend, recommendations) {
+        const recommendationsText = recommendations.length > 0
+            ? recommendations.map((rec, i) => `${i + 1}. ${rec}`).join('\n')
+            : 'Нет рекомендаций';
+        const message = `📊 *ОТЧЕТ О РЫНКЕ*
+
+📈 *Статистика:*
+• Сделок: ${totalTrades}
+• Винрейт: ${winRate.toFixed(1)}%
+• Profit Factor: ${profitFactor.toFixed(2)}
+
+🎯 *Паттерны:*
+• Лучший: ${bestPattern}
+• Тренд: ${currentTrend}
+
+💡 *РЕКОМЕНДАЦИИ:*
+${recommendationsText}`;
+        await this.sendToAllChats(message);
+    }
+    /**
+     * Отправить LLM комментарий
+     */
+    async sendLLMCommentary(title, marketOverview, tradingOpportunities, riskAssessment, recommendations) {
+        const opportunitiesText = tradingOpportunities.length > 0
+            ? tradingOpportunities.map((opp, i) => `${i + 1}. ${opp}`).join('\n')
+            : 'Нет возможностей';
+        const recommendationsText = recommendations.length > 0
+            ? recommendations.map((rec, i) => `${i + 1}. ${rec}`).join('\n')
+            : 'Нет рекомендаций';
+        const message = `🧠 *${title}*
+
+🌍 *ОБЗОР РЫНКА:*
+${marketOverview}
+
+🎯 *ТОРГОВЫЕ ВОЗМОЖНОСТИ:*
+${opportunitiesText}
+
+⚠️ *ОЦЕНКА РИСКОВ:*
+${riskAssessment}
+
+💡 *РЕКОМЕНДАЦИИ:*
+${recommendationsText}`;
+        await this.sendToAllChats(message);
+    }
+    /**
+     * Отправить ошибку
+     */
+    async sendError(title, message) {
+        const errorMessage = `❌ *${title}*
+
+${message}
+
+🕐 *Время:* ${new Date().toLocaleString('ru-RU')}`;
+        await this.sendToAllChats(errorMessage);
+    }
+    /**
+     * Отправить тестовое сообщение
+     */
+    async sendTestMessage() {
+        const message = `🧪 *ТЕСТОВОЕ СООБЩЕНИЕ*
+
+✅ Telegram уведомления работают корректно
+🕐 Время: ${new Date().toLocaleString('ru-RU')}`;
+        await this.sendToAllChats(message);
+    }
+    /**
+     * Отправить сообщение во все чаты
+     */
+    async sendToAllChats(message) {
+        for (const chatId of this.chatIds) {
+            try {
+                await this.bot.telegram.sendMessage(chatId, message, {
+                    parse_mode: 'Markdown',
+                });
+                console.log(`📱 Сообщение отправлено в чат ${chatId}`);
+            }
+            catch (error) {
+                console.error(`❌ Ошибка отправки в чат ${chatId}:`, error);
+            }
+        }
+    }
+}
+exports.TelegramNotifier = TelegramNotifier;
+//# sourceMappingURL=telegram-notifier.js.map

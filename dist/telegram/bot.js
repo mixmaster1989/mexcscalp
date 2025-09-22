@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MexcTelegramBot = void 0;
 const node_telegram_bot_api_1 = __importDefault(require("node-telegram-bot-api"));
 const events_1 = require("events");
-const { getRandomJoke } = require('../../jokes');
 /**
  * Простой Telegram бот без авторизации - просто шлет уведомления в группу
  * Теперь с шутками для Васечка и командным стилем "мы"
@@ -40,8 +39,8 @@ class MexcTelegramBot extends events_1.EventEmitter {
             this.isRunning = true;
             this.startTime = Date.now();
             this.logger.info('🤖 Мы запустили Telegram бота');
-            // Уведомляем в группу о запуске
-            await this.sendMessage('🚀 *Мы запустили MEXC Scalp Bot*\n\nСистема готова к торговле!\n\n' + getRandomJoke());
+            // Уведомляем в группу о запуске (без дополнительных вставок)
+            await this.sendMessage('🚀 *Мы запустили MEXC Scalp Bot*\n\nСистема готова к торговле!');
         }
         catch (error) {
             this.logger.error('Ошибка запуска Telegram бота:', error);
@@ -54,7 +53,7 @@ class MexcTelegramBot extends events_1.EventEmitter {
     async stop() {
         try {
             this.isRunning = false;
-            await this.sendMessage('⏹️ *Мы остановили MEXC Scalp Bot*\n\nСистема остановлена для обслуживания.\n\n' + getRandomJoke());
+            await this.sendMessage('⏹️ *Мы остановили MEXC Scalp Bot*\n\nСистема остановлена для обслуживания.');
             await this.bot.stopPolling();
             this.logger.info('🤖 Мы остановили Telegram бота');
         }
@@ -75,62 +74,10 @@ class MexcTelegramBot extends events_1.EventEmitter {
             }
         });
         this.bot.on('error', (error) => {
-            // Детальная отладка ошибки
-            this.logger.error('🔴 TELEGRAM ERROR ДЕТАЛИ:', {
-                message: error.message,
-                code: error.code,
-                stack: error.stack,
-                name: error.name,
-                fullError: JSON.stringify(error, null, 2)
-            });
-            // Проверяем тип ошибки
-            if (error.message && error.message.includes('AggregateError')) {
-                this.logger.error('🚨 ОБНАРУЖЕН AGGREGATE ERROR В TELEGRAM!');
-                this.logger.error('📋 Детали AggregateError:', {
-                    message: error.message,
-                    code: error.code,
-                    stack: error.stack
-                });
-            }
-            // Проверяем код ошибки
-            if (error.code === 'EFATAL') {
-                this.logger.error('💀 КРИТИЧЕСКАЯ ОШИБКА EFATAL В TELEGRAM!');
-                this.logger.error('📋 Детали EFATAL:', {
-                    message: error.message,
-                    stack: error.stack
-                });
-            }
-            this.logger.error('Ошибка Telegram бота:', error);
+            this.logger.warn('Telegram error (suppressed):', error.message);
         });
-        this.bot.on('polling_error', (error) => {
-            // Детальная отладка ошибки
-            this.logger.error('🔴 POLLING ERROR ДЕТАЛИ:', {
-                message: error.message,
-                code: error.code,
-                stack: error.stack,
-                name: error.name,
-                fullError: JSON.stringify(error, null, 2)
-            });
-            // Проверяем тип ошибки
-            if (error.message && error.message.includes('AggregateError')) {
-                this.logger.error('🚨 ОБНАРУЖЕН AGGREGATE ERROR!');
-                this.logger.error('📋 Детали AggregateError:', {
-                    message: error.message,
-                    code: error.code,
-                    stack: error.stack
-                });
-            }
-            // Проверяем код ошибки
-            if (error.code === 'EFATAL') {
-                this.logger.error('💀 КРИТИЧЕСКАЯ ОШИБКА EFATAL!');
-                this.logger.error('📋 Детали EFATAL:', {
-                    message: error.message,
-                    stack: error.stack
-                });
-            }
-            // Логируем общую ошибку
-            this.logger.error('Ошибка polling:', error);
-        });
+        // Polling отключен, обработчик не нужен
+        // this.bot.on('polling_error', (error) => {});
     }
     /**
      * Обработать сообщение
@@ -142,7 +89,7 @@ class MexcTelegramBot extends events_1.EventEmitter {
         const text = msg.text.toLowerCase();
         try {
             if (text === '/start') {
-                await this.bot.sendMessage(chatId, '👋 Привет! Мы - команда MEXC Scalp Bot!\n\nМы торгуем ETH/USDC автоматически.\n\n' + getRandomJoke());
+                await this.bot.sendMessage(chatId, '👋 Привет! Мы - команда MEXC Scalp Bot!\n\nМы торгуем ETH/USDC автоматически.');
             }
             else if (text === '/status') {
                 await this.handleStatusCommand(chatId);
@@ -153,7 +100,7 @@ class MexcTelegramBot extends events_1.EventEmitter {
             else if (text.startsWith('/')) {
                 const command = text.substring(1);
                 const response = await this.onTradingCommand(command, chatId);
-                await this.bot.sendMessage(chatId, response + '\n\n' + getRandomJoke());
+                await this.bot.sendMessage(chatId, response);
             }
         }
         catch (error) {
@@ -175,7 +122,7 @@ class MexcTelegramBot extends events_1.EventEmitter {
 
 *Время:* ${this.formatTime(Date.now())}
     `;
-        await this.bot.sendMessage(chatId, message + '\n\n' + getRandomJoke());
+        await this.bot.sendMessage(chatId, message);
     }
     /**
      * Обработать команду статистики
@@ -195,7 +142,7 @@ class MexcTelegramBot extends events_1.EventEmitter {
 
 *Время:* ${this.formatTime(Date.now())}
     `;
-        await this.bot.sendMessage(chatId, message + '\n\n' + getRandomJoke());
+        await this.bot.sendMessage(chatId, message);
     }
     /**
      * Отправить сообщение в группу
@@ -246,9 +193,7 @@ ${sideIcon} *Мы совершили сделку ${fill.side.toUpperCase()}*
 *Сумма:* \`$${(fill.price * fill.quantity).toFixed(2)}\`
 *Время:* ${this.formatTime(fill.timestamp)}
     `;
-        // Добавляем шутку каждые 3 сообщения для Васечка
-        const joke = this.jokeCount % 3 === 0 ? '\n\n' + getRandomJoke() : '';
-        await this.sendMessage(message + joke);
+        await this.sendMessage(message);
     }
     /**
      * Уведомление об изменении режима
@@ -263,7 +208,7 @@ ${regimeIcons[current]} *Мы изменили режим рынка*
 *Уверенность:* \`${(confidence * 100).toFixed(1)}%\`
 *Время:* ${this.formatTime(Date.now())}
     `;
-        await this.sendMessage(message + '\n\n' + getRandomJoke());
+        await this.sendMessage(message);
     }
     /**
      * Уведомление об ошибке
@@ -276,7 +221,7 @@ ${regimeIcons[current]} *Мы изменили режим рынка*
 *Ошибка:* \`${error.message}\`
 *Время:* ${this.formatTime(Date.now())}
     `;
-        await this.sendMessage(message + '\n\n' + getRandomJoke());
+        await this.sendMessage(message);
     }
     /**
      * Критическое уведомление
@@ -289,7 +234,7 @@ ${text}
 
 *Время:* ${this.formatTime(Date.now())}
     `;
-        await this.sendMessage(message + '\n\n' + getRandomJoke());
+        await this.sendMessage(message);
     }
     /**
      * Системное уведомление
@@ -302,7 +247,7 @@ ${text}
 
 *Время:* ${this.formatTime(Date.now())}
     `;
-        await this.sendMessage(message + '\n\n' + getRandomJoke());
+        await this.sendMessage(message);
     }
     /**
      * Получить иконку статуса

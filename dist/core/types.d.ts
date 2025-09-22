@@ -33,6 +33,13 @@ export interface Trade {
     timestamp: number;
     buyer: boolean;
 }
+export interface BookTicker {
+    symbol: string;
+    bidPrice: number;
+    bidQty: number;
+    askPrice: number;
+    askQty: number;
+}
 export interface Order {
     id: string;
     clientOrderId: string;
